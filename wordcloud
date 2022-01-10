@@ -1,0 +1,141 @@
+#패키지 설치_실행마다 C++ 설치
+from konlpy.tag import Okt
+from collections import Counter
+
+
+#원본 파일 열기
+f=open("C:/Users/real05/Desktop/ad-hoc/21.12.06 egis/word_chunk.txt",'r',encoding='utf-8')
+text=f.read()
+
+#2글자 아래로 삭제
+okt=Okt()
+noun=okt.nouns(text)
+for i,v in enumerate(noun):
+    if len(v)<2:
+        noun.pop(i)
+
+#리스트 내 단어 정제
+noun2=[]
+for item in noun:
+    item_mod=item.replace("정책","")
+    item_mod=item_mod.replace("추진","")
+    item_mod=item_mod.replace("필요","")
+    item_mod=item_mod.replace("생각","")
+    item_mod=item_mod.replace("위해","")
+    item_mod=item_mod.replace("통해","")
+    item_mod=item_mod.replace("더","")
+    item_mod=item_mod.replace("것","")
+    item_mod=item_mod.replace("좀","")
+    item_mod=item_mod.replace("대한","")
+    item_mod=item_mod.replace(" ","")
+    item_mod=item_mod.replace(".","")
+    noun2.append(item_mod)
+
+
+#명사 카운트
+for i,v in enumerate(noun2):
+    if len(v)<2:
+        noun2.pop(i)
+    
+count=Counter(noun2)
+f.close()
+
+noun_list=count.most_common(71)
+
+#워드클라우드 만들기(불용어)
+from wordcloud import WordCloud
+from wordcloud import STOPWORDS
+import numpy as np
+import matplotlib.pyplot as plt
+from PIL import Image
+from wordcloud import ImageColorGenerator
+from matplotlib import font_manager
+
+#폰트명: 폰트속성-보안 탭에 있는 위치 복붙
+#font_fname = 'C:/Users/real05/AppData/Local/Microsoft/Windows/Fonts/SCDream7.otf'
+font_fname = 'C:/Windows/Fonts/malgun.ttf'
+font_family = font_manager.FontProperties(fname=font_fname).get_name()
+
+plt.rcParams["font.family"] = font_family
+
+
+mystopwords=set(STOPWORDS)
+#mystopwords.add('영화') #1개
+#mystopwords.update(['',''])#여러 개
+#print(len(mystopwords))
+
+#원하는 색상으로 지정
+def color_func(word, font_size, position,orientation,random_state=None, **kwargs):
+    return("hsl({:d},{:d}%, {:d}%)".format(np.random.randint(130,216),np.random.randint(78,100),np.random.randint(40,60)))
+
+#모양 잡아서 틀만들기
+#image_file='C:/Users/real05/Desktop/RP/21.04.07/school.png'
+#img_file=Image.open(image_file)
+
+#school_mask=np.array(img_file)
+
+#plt.figure(figsize=(8,8))
+#plt.imshow(school_mask, interpolation='bilinear')
+#plt.axis('off')
+
+#filename='graph01.png'
+#plt.savefig(filename)
+
+#워드클라우드 만들기
+#wc=WordCloud(font_path='C:/Windows/Fonts/malgun.ttf',
+             #background_color="white",max_words=100, max_font_size=300, mask=school_mask, color_func=color_func, stopwords=mystopwords)
+
+wc70_11=WordCloud(font_path='C:/Windows/Fonts/malgun.ttf',
+             background_color="white",max_words=71, width=1000, height=1000, max_font_size=300, color_func=color_func, stopwords=mystopwords)
+
+wc70_23=WordCloud(font_path='C:/Windows/Fonts/malgun.ttf',
+             background_color="white",max_words=71, width=667, height=1000, max_font_size=300, color_func=color_func, stopwords=mystopwords)
+
+wc70_32=WordCloud(font_path='C:/Windows/Fonts/malgun.ttf',
+             background_color="white",max_words=71, width=1000, height=667, max_font_size=300, color_func=color_func, stopwords=mystopwords)
+
+
+'''wc70=WordCloud(font_path='C:/Windows/Fonts/malgun.ttf',
+             background_color="white",max_words=71, width=1000, height=1000, max_font_size=300, color_func=color_func, stopwords=mystopwords)
+
+wc50=WordCloud(font_path='C:/Windows/Fonts/malgun.ttf',
+             background_color="white",max_words=51, width=1000, height=1000, max_font_size=300, color_func=color_func, stopwords=mystopwords)
+
+wc30=WordCloud(font_path='C:/Windows/Fonts/malgun.ttf',
+             background_color="white",max_words=31, width=1000, height=1000, max_font_size=300, color_func=color_func, stopwords=mystopwords)
+'''
+#wc.generate_from_frequencies(dict(noun_list))
+wc70_11.generate_from_frequencies(dict(noun_list))
+wc70_23.generate_from_frequencies(dict(noun_list))
+wc70_32.generate_from_frequencies(dict(noun_list))
+#wc70.generate_from_frequencies(dict(noun_list))
+#wc50.generate_from_frequencies(dict(noun_list))
+#wc30.generate_from_frequencies(dict(noun_list))
+#plt.figure(figsize=(12,12))
+#plt.imshow(wc, interpolation='bilinear')
+#plt.axis('off')
+#filename='graphb.png'
+#plt.savefig(filename)
+
+#wc.to_file('C:/Users/real05/Desktop/RP/21.04.07/wordcloud_busan_school.png')
+wc70_11.to_file('C:/Users/real05/Desktop/ad-hoc/21.12.06 egis/wordcloud_gtb11_70.png')
+wc70_23.to_file('C:/Users/real05/Desktop/ad-hoc/21.12.06 egis/wordcloud_gtb23_70.png')
+wc70_32.to_file('C:/Users/real05/Desktop/ad-hoc/21.12.06 egis/wordcloud_gtb32_70.png')
+'''wc70.to_file('C:/Users/real05/Desktop/ad-hoc/21.12.06 egis//wordcloud_gtb_70.png')
+wc50.to_file('C:/Users/real05/Desktop/ad-hoc/21.12.06 egis/wordcloud_gtb_50.png')
+wc30.to_file('C:/Users/real05/Desktop/ad-hoc/21.12.06 egis/wordcloud_gtb_30.png')'''
+
+
+#csv 파일 저장
+import csv
+with open("C:/Users/real05/Desktop/ad-hoc/21.12.06 egis/noun_list_gtb_70.csv",'w', newline='',encoding='euc-kr') as f:
+    csvw=csv.writer(f)
+    for v in noun_list:
+        csvw.writerow(v)
+
+	
+#text 파일 저장
+with open("C:/Users/real05/Desktop/ad-hoc/21.12.06 egis/noun_list_gtb_70.txt",'w',encoding='utf-8') as f:
+    for v in noun_list:
+        f.write(" ".join(map(str,v)))
+        f.write("\n")
